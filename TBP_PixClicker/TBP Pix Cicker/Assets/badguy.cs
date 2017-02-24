@@ -24,10 +24,12 @@ public class badguy : MonoBehaviour {
 	public int maxTime;
 	public bool Posed = false;
 	[Header("Abilty(s)")]
-	public bool Invs = true;
-	public bool Rage = false;
-	public bool Pos = false;
-	public int PosTime = 500;
+	public bool Invs = true; // hidden from attacks
+	public bool Rage = false; // +1 to all attacks (adds on per rage)
+	public bool Pos = false; // applys posion to player (-0.01hp/tick)
+	public int PosTime = 500; // how long it applys the pos effect
+	//public bool Clone = false; // the idea is that there are two monsters you must kill
+	//public bool Grow = false; // the idea is that the monster hp *2/abl
 
 	IEnumerator damw()
 	{
@@ -81,7 +83,7 @@ public class badguy : MonoBehaviour {
 		t++;
 		t++;
 		t2++;
-		//t2++;
+//		AblPic = AblPic;
 		if (Posed) {
 			t3++;
 			_Core.GetComponent<_Core> ().Removehp (0.1f * ((Mathf.RoundToInt(_Core.GetComponent<_Core> ().Zone/4f))/4));
@@ -104,7 +106,7 @@ public class badguy : MonoBehaviour {
 			StartCoroutine("Abl");
 
 		}
-		if (t2 >= TimeTellAttack) {
+		if (t2 >= TimeTellAttack && but.interactable == true) {
 		
 			t2 = 0;
 			StartCoroutine ("Attack");

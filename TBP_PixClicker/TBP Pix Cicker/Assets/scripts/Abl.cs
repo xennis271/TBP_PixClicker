@@ -14,6 +14,7 @@ public class Abl : MonoBehaviour {
 	[Header("Common GO's")]
 	public GameObject AblSlotOneGO;
 	public GameObject BadGO;
+	public GameObject _CoreGO;
 	//public Image AblSlotOne;
 	public Slider Bad;
 	[Header("Common Pic's")]
@@ -32,28 +33,30 @@ public class Abl : MonoBehaviour {
 		//AblGOs [0].SetActive (false);
 		int Value = Random.Range (0, AblGOs.Count-1);
 		int Value2 = 0;
+		int Buff = 2;
+		int Debuff = 4;
 		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
 		scrachCD = true;
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit/4);
+		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff + _CoreGO.GetComponent<_Core>().Zone/Debuff);
 		yield return new WaitForSeconds(0.5f); 
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
 		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit/4);
+		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
 		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit/4);
+		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
 		yield return new WaitForSeconds(0.5f); 
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
 		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit/4);
+		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
 		yield return new WaitForSeconds(0.5f); 
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
 		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit/4);
+		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
 		yield return new WaitForSeconds(0.5f); 
 		AblGOs[Value].SetActive(true);
 		// turn off all!
@@ -112,7 +115,7 @@ public class Abl : MonoBehaviour {
 				if(PlayersAbls.Contains("scrach"))
 				{
 					scrachCD = false;
-					//AblGOs [0].SetActive (true);
+					AblGOs [0].SetActive (true);
 					AblSlotOneGO.SetActive (true);
 				}
 				_30sCDUsed = true;

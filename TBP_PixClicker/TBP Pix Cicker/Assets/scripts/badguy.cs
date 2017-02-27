@@ -28,6 +28,7 @@ public class badguy : MonoBehaviour {
 	public bool Rage = false; // +1 to all attacks (adds on per rage)
 	public bool Pos = false; // applys posion to player (-0.01hp/tick)
 	public int PosTime = 500; // how long it applys the pos effect
+	public bool Healing = false; // heals the badguy (offen combo with Invs
 	//public bool Clone = false; // the idea is that there are two monsters you must kill
 	//public bool Grow = false; // the idea is that the monster hp *2/abl
 
@@ -51,6 +52,9 @@ public class badguy : MonoBehaviour {
 			Posed = true;
 		}
 		Hold.sprite = AblPic;
+		if (Healing == true) {
+			BadHpBar.value = BadHpBar.value + _Core.GetComponent<_Core>().Zone/100 + 0.5f;
+		}
 		yield return new WaitForSeconds(5); // add a little bit of time for the user to read the last text!
 		if (Invs) {
 			but.interactable = true;
@@ -86,7 +90,7 @@ public class badguy : MonoBehaviour {
 //		AblPic = AblPic;
 		if (Posed) {
 			t3++;
-			_Core.GetComponent<_Core> ().Removehp (0.1f * ((Mathf.RoundToInt(_Core.GetComponent<_Core> ().Zone/4f))/4));
+			_Core.GetComponent<_Core> ().Removehp (0.1f * ((Mathf.RoundToInt(_Core.GetComponent<_Core> ().Zone/4f))/8));
 			if (t3 >= PosTime) {
 				t3 = 0;
 				Posed = false;
@@ -94,10 +98,15 @@ public class badguy : MonoBehaviour {
 		}
 		if (BadHpBar.value == BadHpBar.minValue) {
 			// so the _core handles almost all of this so lets use the api built in.
+			Debug.Log("before:" + BadHpBar.maxValue);
+			BadHpBar.maxValue = BadHpBar.maxValue + _Core.GetComponent<_Core>().Zone/8;
+			Debug.Log("after:" + BadHpBar.maxValue);
 			_Core.GetComponent<_Core> ().SummonNewBad ();
 			_Core.GetComponent<_Core>().KilledMob();
 			_Core.GetComponent<_Core> ().UpdateStats ();
-			Damage = Damage + Mathf.RoundToInt(_Core.GetComponent<_Core> ().Zone/4f);
+			//_Core.GetComponent<_Core> ().Zone++;
+			Damage = Damage + Mathf.RoundToInt(_Core.GetComponent<_Core> ().Zone/8f);
+
 		}
 		if (t >= maxTime) {
 			// run ablit

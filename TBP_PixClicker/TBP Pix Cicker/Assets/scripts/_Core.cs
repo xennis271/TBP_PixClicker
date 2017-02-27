@@ -79,7 +79,7 @@ public class _Core : MonoBehaviour {
 		Bad.SetActive (false);
 		// update setings...
 		int outp;
-		Zone++;
+		//Zone++; Handled by badguy now...
 		outp = Random.Range(0,MobsNormal.Count);
 		//Debug.Log (outp);
 		Bad.GetComponent<badguy> ().NormalPic = MobsNormal [outp];
@@ -102,6 +102,16 @@ public class _Core : MonoBehaviour {
 			Bad.GetComponent<badguy> ().Pos = true;
 		} else {
 			Bad.GetComponent<badguy> ().Pos = false;
+		}
+		if (outs == "Healing") {
+
+			Bad.GetComponent<badguy> ().Healing = true;
+		} else {
+			Bad.GetComponent<badguy> ().Healing = false;
+		}
+		if (outs == "Invis&Healing") {
+			Bad.GetComponent<badguy> ().Invs = true;
+			Bad.GetComponent<badguy> ().Healing = true;
 		}
 		Bad.GetComponent<badguy> ().BadHpBar.value = Bad.GetComponent<badguy> ().BadHpBar.maxValue;
 		Bad.GetComponent<badguy> ().Damage = 1;
@@ -149,6 +159,10 @@ public class _Core : MonoBehaviour {
 		LvT.text = Lv.ToString();
 		ZoneT.text = Zone.ToString();
 		DeathsT.text = Deaths.ToString();
+		if (Lv.ToString() == "2" && AblGO.GetComponent<Abl>().PlayersAbls.Contains("scrach") != true) {
+			scrachGO.SetActive (true);
+			AblGO.GetComponent<Abl> ().UnlockAbl ("scrach", 0);
+		}
 		if (Hp.value <= 0) { // adds to the death pool but no math yet...
 		
 			Hp.value = 100;
@@ -157,7 +171,7 @@ public class _Core : MonoBehaviour {
 			DeathsT.text = Deaths.ToString();
 			// Money and math time!
 
-			AmountWeTook = (AmountWeTook*2) + (Deaths*10);
+			AmountWeTook = (AmountWeTook*2) * (Deaths*2);
 			//Debug("Amount you had" + Gold.ToString() + " The amount we took" +AmountWeTook.ToString()); 
 			Gold = Gold - AmountWeTook; // << thats one mean mean line!
 			if (Gold < 0) {
@@ -201,7 +215,7 @@ public class _Core : MonoBehaviour {
 			//Debug.Log("Saving Game ( not this is still being built ) ");
 			Directory.CreateDirectory (@PathForSaving);
 
-			string DataToSave = "#Gold#" + Gold + "#Lv#" + Lv + "#Zone#" + Zone + "#Deaths#" + Deaths + "#ClickerUpgrade#" + ClickerUpgrade + "#DamPerHit#" + Bad.GetComponent<badguy> ().DamPerHit + "#GameID#" + GameID + "#AblPoints#" + AblGO.GetComponent<Abl> ().AblPoints;
+			string DataToSave = "#Gold#" + Gold + "#Lv#" + Lv + "#Zone#" + Zone + "#Deaths#" + Deaths + "#ClickerUpgrade#" + ClickerUpgrade + "#DamPerHit#" + Bad.GetComponent<badguy> ().DamPerHit + "#GameID#" + GameID + "#AblPoints#" + AblGO.GetComponent<Abl> ().AblPoints + "#BadMaxHp#" + Bad.GetComponent<badguy>().BadHpBar.maxValue;
 			// now we encrypt
 			string NewDataToSave = "";
 			NewDataToSave = EncryptDecrypt(DataToSave);
@@ -323,7 +337,13 @@ public class _Core : MonoBehaviour {
 				int.TryParse(AblPointsS,out AblPoints);
 				AblGO.GetComponent<Abl>().AblPoints = AblPoints;
 				Debug.Log("Your ABL Points where set to :" + AblPoints);
-			//OutPut.text = "Loaded your file.";
+				string BadMaxHp = "";
+				float MaxHp = 100f; // MIN!
+				playerStats.TryGetValue("BadMaxHp",out BadMaxHp);
+				float.TryParse(BadMaxHp,out MaxHp);
+				Bad.GetComponent<badguy>().BadHpBar.maxValue = MaxHp;
+
+				//BadMaxHp
 		}
 		catch (System.Exception ex) {
 			// we cant save
@@ -374,8 +394,7 @@ public class _Core : MonoBehaviour {
 		} else {
 			ClickerUpgradeGO.SetActive (true);
 		}
-		if (Lv >= 1) {
-			scrachGO.SetActive (true);
+		if (Lv >= 1 && AblGO.GetComponent<Abl>().PlayersAbls.Contains("scrach") != true) {
 			AblGO.GetComponent<Abl> ().UnlockAbl ("scrach", 0);
 		}
 		Bar.interactable = false;

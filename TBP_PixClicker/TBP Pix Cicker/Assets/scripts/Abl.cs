@@ -72,6 +72,7 @@ public class Abl : MonoBehaviour {
 		if (AblPoints >= Cost) {
 			AblPoints = AblPoints - Cost;
 			PlayersAbls.Add (Abl);
+
 		}
 	}
 	public void UseAbl(string AblName){
@@ -89,7 +90,10 @@ public class Abl : MonoBehaviour {
 			}
 		}
 	}
-
+	public void ResetSkills(){ // NO UNLOCK!
+		scrachCD = false;
+		//AblSlotOneGO.SetActive (true);
+	}
 	public void Update() {
 		Ticks++;
 		if (Ticks > 60) {
@@ -115,7 +119,6 @@ public class Abl : MonoBehaviour {
 				if(PlayersAbls.Contains("scrach"))
 				{
 					scrachCD = false;
-					AblGOs [0].SetActive (true);
 					AblSlotOneGO.SetActive (true);
 				}
 				_30sCDUsed = true;

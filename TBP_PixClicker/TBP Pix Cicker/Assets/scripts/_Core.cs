@@ -191,7 +191,7 @@ public class _Core : MonoBehaviour {
 	public void KilledMob() {
 		Zone++;
 		PreZone++;
-		Gold = Gold + Zone * Zone / 2;
+		Gold = Gold + Zone * Zone / 10; // 100 = 10 10,000 = 100 100,000 = 10,000 (seams fair) [1 = 0.1... so the 1st ten lvs you dont get gold...
 		// Nice job!
 		// need to give some EXP
 		EXPbar.value = EXPbar.value + Zone/2;
@@ -213,14 +213,15 @@ public class _Core : MonoBehaviour {
 		if (AllowLocalSaving) {
 			// saving mech here
 			//Debug.Log("Saving Game ( not this is still being built ) ");
-			Directory.CreateDirectory (@PathForSaving);
+
+			Directory.CreateDirectory (@Application.persistentDataPath + PathForSaving);
 
 			string DataToSave = "#Gold#" + Gold + "#Lv#" + Lv + "#Zone#" + Zone + "#Deaths#" + Deaths + "#ClickerUpgrade#" + ClickerUpgrade + "#DamPerHit#" + Bad.GetComponent<badguy> ().DamPerHit + "#GameID#" + GameID + "#AblPoints#" + AblGO.GetComponent<Abl> ().AblPoints + "#BadMaxHp#" + Bad.GetComponent<badguy>().BadHpBar.maxValue;
 			// now we encrypt
 			string NewDataToSave = "";
 			NewDataToSave = EncryptDecrypt(DataToSave);
 			//Debug.Log (NewDataToSave);
-			File.WriteAllText(@PathForSaving + "/" + DatabaseName + DatabaseExt ,NewDataToSave);
+			File.WriteAllText(@Application.persistentDataPath + PathForSaving + "/" + DatabaseName + DatabaseExt ,NewDataToSave);
 
 
 			OutPut.text = "Saved your data!";
@@ -238,7 +239,8 @@ public class _Core : MonoBehaviour {
 			//	Debug.Log("Loading Game ( not this is still being built ) ");
 			//File.Decrypt (@"/Data/testing.data");
 			try {
-			string Oldtesting = File.ReadAllText (@PathForSaving + "/" + DatabaseName + DatabaseExt);
+				
+				string Oldtesting = File.ReadAllText (@Application.persistentDataPath + PathForSaving + "/" + DatabaseName + DatabaseExt);
 				string testing = "";
 				testing = EncryptDecrypt(Oldtesting);
 				Debug.Log(testing);
@@ -343,6 +345,13 @@ public class _Core : MonoBehaviour {
 				float.TryParse(BadMaxHp,out MaxHp);
 				Bad.GetComponent<badguy>().BadHpBar.maxValue = MaxHp;
 
+
+
+				// SKILLS ZONE!
+				AblGO.GetComponent<Abl>().ResetSkills();
+				if(Lv>= 2){
+					AblGO.GetComponent<Abl>().UnlockAbl("scrach",0);
+				}
 				//BadMaxHp
 		}
 		catch (System.Exception ex) {
@@ -399,7 +408,7 @@ public class _Core : MonoBehaviour {
 		}
 		Bar.interactable = false;
 		AmountWeTook = 1;
-		StartGO.SetActive (true);
-		GameStart.SetActive (false);
+		//StartGO.SetActive (true);
+		GameStart.SetActive (true);
 	}
 }

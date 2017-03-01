@@ -24,6 +24,7 @@ public class badguy : MonoBehaviour {
 	public int maxTime;
 	public bool Posed = false;
 	[Header("Abilty(s)")]
+	public bool InAbilty = true;
 	public bool Invs = true; // hidden from attacks
 	public bool Rage = false; // +1 to all attacks (adds on per rage)
 	public bool Pos = false; // applys posion to player (-0.01hp/tick)
@@ -43,45 +44,54 @@ public class badguy : MonoBehaviour {
 		// you cant hit during abl
 		if (Invs) {
 			but.interactable = false;
+			InAbilty = true;
 		}
 		if (Rage && Damage <= 3) {
 			Damage++;
+			InAbilty = true;
 		}
 		if (Pos) {
 		// apply pos
 			Posed = true;
+			InAbilty = true;
 		}
-		Hold.sprite = AblPic;
+		//Hold.sprite = AblPic;
 		if (Healing == true) {
 			BadHpBar.value = BadHpBar.value + _Core.GetComponent<_Core>().Zone/100 + 0.5f;
+			InAbilty = true;
 		}
 		yield return new WaitForSeconds(5); // add a little bit of time for the user to read the last text!
 		if (Invs) {
 			but.interactable = true;
+			InAbilty = false;
 		}
 		if (Rage || Damage > 2) {
 			Rage = false;
+			InAbilty = false;
 		}
-		Hold.sprite = NormalPic;
+		//Hold.sprite = AttackingPic;
 		t = 0;
 	}
 	IEnumerator Attack()
 	{
-		_Core.GetComponent<_Core> ().Removehp (Damage);
-		// you cant hit during abl
-		//but.interactable = false;
+		if(InAbilty){
+			Debug.Log ("Attack Blocked due to it being in abl.");
+		}else{
 		Hold.sprite = AttackingPic;
-		yield return new WaitForSeconds(1); // add a little bit of time for the user to read the last text!
+		_Core.GetComponent<_Core> ().Removehp (Damage);
+		Hold.sprite = AttackingPic;
+		yield return new WaitForSeconds (1); // add a little bit of time for the user to read the last text!
 		//but.interactable = true;
 		Hold.sprite = NormalPic;
-
-
+		}
 	}
+
+
 	public void dam() {
 		BadHpBar.value = BadHpBar.value - DamPerHit;
+		// are we in anyother sprite?
 		Hold.sprite = DamagedPic;
-		StartCoroutine ("damw");
-
+	StartCoroutine ("damw");
 	}
 	public void Update() {
 		t++;
@@ -114,10 +124,12 @@ public class badguy : MonoBehaviour {
 			Hold.sprite = AblPic;
 			StartCoroutine("Abl");
 
+
 		}
 		if (t2 >= TimeTellAttack && but.interactable == true) {
 		
 			t2 = 0;
+			Hold.sprite = AttackingPic;
 			StartCoroutine ("Attack");
 
 			}

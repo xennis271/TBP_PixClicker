@@ -11,8 +11,10 @@ public class Abl : MonoBehaviour {
 	public List<GameObject> AblGOs = new List<GameObject>();
 	[Header("Abl Cooldown List")]
 	public bool scrachCD = false;
+	public bool healingCD = false;
 	[Header("Common GO's")]
 	public GameObject AblSlotOneGO;
+	public GameObject AblSlotTwoGO;
 	public GameObject BadGO;
 	public GameObject _CoreGO;
 	//public Image AblSlotOne;
@@ -25,7 +27,10 @@ public class Abl : MonoBehaviour {
 	public int sec = 0;
 	public int min = 0;
 	bool _30sCDUsed = false;
-
+	[Header("Abl vars")]
+	public int Healing_TimeOfEffect = 10;
+	public int Healing_AmountHealedPerTick = 1;
+	public int Scrach_Damage = 20;
 
 
 	IEnumerator AblScrach()
@@ -33,31 +38,67 @@ public class Abl : MonoBehaviour {
 		//AblGOs [0].SetActive (false);
 		int Value = Random.Range (0, AblGOs.Count-1);
 		int Value2 = 0;
-		int Buff = 2;
-		int Debuff = 4;
+		//int Buff = 2;
+		//int Debuff = 4;
 		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
 		scrachCD = true;
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff + _CoreGO.GetComponent<_Core>().Zone/Debuff);
+		Bad.value = Bad.value - Scrach_Damage;
 		yield return new WaitForSeconds(0.5f); 
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
-		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		Bad.value = Bad.value - Scrach_Damage;
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
-		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		Bad.value = Bad.value - Scrach_Damage;
 		yield return new WaitForSeconds(0.5f); 
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
-		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		Bad.value = Bad.value - Scrach_Damage;
 		yield return new WaitForSeconds(0.5f); 
 		AblGOs[Value].SetActive(true);
 		Value = Random.Range (0, AblGOs.Count-1);
-		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
-		Bad.value = Bad.value - Mathf.RoundToInt(BadGO.GetComponent<badguy>().DamPerHit*Buff+ _CoreGO.GetComponent<_Core>().Zone/Debuff);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		Bad.value = Bad.value - Scrach_Damage;
 		yield return new WaitForSeconds(0.5f); 
+		AblGOs[Value].SetActive(true);
+		// turn off all!
+		foreach (var go in AblGOs) {
+			go.SetActive (false);
+		}
+	}
+	IEnumerator healing() {
+	// nothing for now.
+		int Value = Random.Range (0, AblGOs.Count-1);
+		int Value2 = 0;
+		//int Buff = 2;
+		//int Debuff = 4;
+		int WaitTime = Mathf.RoundToInt (Healing_TimeOfEffect / 4);
+		Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		scrachCD = true;
+		_CoreGO.GetComponent<_Core> ().Hp.value = _CoreGO.GetComponent<_Core> ().Hp.value + Healing_AmountHealedPerTick;
+		yield return new WaitForSeconds(WaitTime); 
+		AblGOs[Value].SetActive(true);
+		Value = Random.Range (0, AblGOs.Count-1);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		_CoreGO.GetComponent<_Core> ().Hp.value = _CoreGO.GetComponent<_Core> ().Hp.value + Healing_AmountHealedPerTick;
+		AblGOs[Value].SetActive(true);
+		Value = Random.Range (0, AblGOs.Count-1);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		_CoreGO.GetComponent<_Core> ().Hp.value = _CoreGO.GetComponent<_Core> ().Hp.value + Healing_AmountHealedPerTick;
+		yield return new WaitForSeconds(WaitTime); 
+		AblGOs[Value].SetActive(true);
+		Value = Random.Range (0, AblGOs.Count-1);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		_CoreGO.GetComponent<_Core> ().Hp.value = _CoreGO.GetComponent<_Core> ().Hp.value + Healing_AmountHealedPerTick;
+		yield return new WaitForSeconds(WaitTime); 
+		AblGOs[Value].SetActive(true);
+		Value = Random.Range (0, AblGOs.Count-1);
+		//Debug.Log ("Value1:" + Value + " Value2:" + Value2);
+		_CoreGO.GetComponent<_Core> ().Hp.value = _CoreGO.GetComponent<_Core> ().Hp.value + Healing_AmountHealedPerTick;
+		yield return new WaitForSeconds(WaitTime); 
 		AblGOs[Value].SetActive(true);
 		// turn off all!
 		foreach (var go in AblGOs) {
@@ -88,11 +129,27 @@ public class Abl : MonoBehaviour {
 					AblSlotOneGO.SetActive (false);
 				}
 			}
+			if (AblName == "healing") {
+				if(healingCD != true){
+					foreach (var Ima in AblImages) {
+						Ima.sprite = AblSprites [1];
+					}
+					StartCoroutine("healing");
+					AblSlotTwoGO.SetActive (false);
+				}
+			}
 		}
 	}
 	public void ResetSkills(){ // NO UNLOCK!
 		scrachCD = false;
+		healingCD = false;
 		//AblSlotOneGO.SetActive (true);
+	}
+	public void LockSkills() {
+		scrachCD = true;
+		healingCD = true;
+		AblSlotOneGO.SetActive (false);
+		AblSlotTwoGO.SetActive (false);
 	}
 	public void Update() {
 		Ticks++;
@@ -120,6 +177,10 @@ public class Abl : MonoBehaviour {
 				{
 					scrachCD = false;
 					AblSlotOneGO.SetActive (true);
+				}
+				if (PlayersAbls.Contains ("healing")) {
+					healingCD = false;
+					AblSlotTwoGO.SetActive (true);
 				}
 				_30sCDUsed = true;
 			}

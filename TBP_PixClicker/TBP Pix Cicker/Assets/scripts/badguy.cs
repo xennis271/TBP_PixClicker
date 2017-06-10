@@ -29,20 +29,17 @@ public class badguy : MonoBehaviour {
 	public int TimeTellAttack;
 	public int maxTime;
 	public bool Posed = false;
-	[Header("Monster Abilty Related stuff")]
-	public bool InAbilty = true;
-	public int PosTime = 500; // how long it applys the pos effect
 	[Header("Monster Abilty(s)")]
+	public bool InAbilty = true;
 	public bool Invs = true; // hidden from attacks
 	public bool Rage = false; // +1 to all attacks (adds on per rage)
 	public bool Pos = false; // applys posion to player (-0.01hp/tick)
+	public int PosTime = 500; // how long it applys the pos effect
 	public bool Healing = false; // heals the badguy (offen combo with Invs
 	public bool Flash = false; // turns the game off and back on.
+	public bool Adv_Block = false; // turns on the adv_block layor
 	public bool Scream = false; // turns off all player skills.
 	public bool Drain = false; // drains player for HP
-	[Header("Boss Abilty(s)")]
-	public bool Adv_Block = false; // turns on the adv_block layor
-	public bool Adv_Grow = false; // Starts the staging prossess.
 	[Header("Player Bools")]
 	public bool P_Invs = false;
 	//public bool Clone = false; // the idea is that there are two monsters you must kill
